@@ -33,12 +33,11 @@ class BinaryClassifier:
         self.neighbors = {}  # Diccionario para almacenar vecinos
         grid_shape = x0.shape
         for x in np.ndindex(x0.shape):  # Cálculo de vecinos
-            neighbors = []
+            neighbors = [x]
             for offset in product(range(-self.r, self.r + 1), repeat=len(x)):
                 # TODO corroborar que las esquinas no se consideren vecinos
-                if all(abs(o) <= self.r for o in offset) and any(o != 0 for o in offset):
+                if (np.sum([abs(o)for o in offset]) <= self.r) and any(o != 0 for o in offset):
                     y = tuple((xi + oi) % lim
-                              if (xi+oi) >= 0 else lim-(xi+oi) % lim
                               for xi, oi, lim in zip(x, offset, grid_shape))
                     if y not in neighbors:
                         neighbors.append(y)
@@ -61,6 +60,7 @@ class BinaryClassifier:
 
     def show(self):
         plt.imshow(self.grid, cmap='binary', interpolation='nearest')
+        plt.clim(0,1)
         plt.colorbar()
         plt.title(f'Clasificador binario (s={self.s}, r={self.r},'+\
                   f'σ={self.sigma}, t={self.t})')
