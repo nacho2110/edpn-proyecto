@@ -35,7 +35,6 @@ class BinaryClassifier:
         for x in np.ndindex(x0.shape):  # Cálculo de vecinos
             neighbors = [x]
             for offset in product(range(-self.r, self.r + 1), repeat=len(x)):
-                # TODO corroborar que las esquinas no se consideren vecinos
                 if (np.sum([abs(o)for o in offset]) <= self.r) and any(o != 0 for o in offset):
                     y = tuple((xi + oi) % lim
                               for xi, oi, lim in zip(x, offset, grid_shape))
@@ -48,7 +47,7 @@ class BinaryClassifier:
         return self.q(x + self.sigma*self.amp(x))
 
     def step(self):
-        new_grid = np.copy(self.grid)
+        new_grid = np.zeros(self.grid.shape)
         for x in np.ndindex(self.grid.shape):
             neighbors = self.neighbors[x]
             neighbor_values = [self.grid[y] for y in neighbors]
