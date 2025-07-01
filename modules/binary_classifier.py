@@ -11,9 +11,9 @@ def amp_polym(x: float, rc: float) -> float:
 def quantize(x: float, s: int, rc: float) -> float:
     """Cuantiza el valor x a un nivel de cuantización s."""
     if x >= rc:
-        return np.max([0, np.ceil(s *(x-rc))/s + rc])
+        return np.max([0, np.ceil(s *(x-rc))/s + rc, 0])
     else:
-        return np.min([1, np.floor(s *(x-rc))/s + rc])
+        return np.min([np.floor(s *(x-rc))/s + rc, 1])
 
 
 class BinaryClassifier:

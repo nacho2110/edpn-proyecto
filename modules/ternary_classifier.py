@@ -80,19 +80,19 @@ class TernaryClassifier:
                 if alpha > 0:
                     # Calculate the average value for red channel 
                     avg_value_r = tot_red_val / alpha
-                    print(f"avg_value_r: {avg_value_r}, alpha: {alpha}")
                     # the new value
                     new_value_r = self._fr(avg_value_r)
-                    print(f"new_value_r: {new_value_r}")
+                    # print(f"new_value_r: {new_value_r}")
                     # If the delta is positive, it means red is dominant
                     # in the other hand, if negative it means green is dominant
                     delta = new_value_r - avg_value_r
                     # we can update using + delta in red and -delta in green
-                    new_value_r = (new_value_r + delta)*alpha
-                    new_value_g = (1 - new_value_r)*alpha
+                    final_r = np.clip((new_value_r + delta)*(1-self.grid[x][2]), 0, 1)
+                    final_g = np.clip((1 - new_value_r)*(1-self.grid[x][2]), 0, 1)
+            
                     new_grid[x] = [
-                    new_value_r,  # Update red channel
-                    new_value_g,  # Update green channel
+                    final_r,  # Update red channel
+                    final_g,  # Update green channel
                     self.grid[x][2]   # Keep blue channel unchanged
                     ]
 
@@ -113,18 +113,20 @@ class TernaryClassifier:
                 if alpha > 0:
                     # Calculate the average value for green channel 
                     avg_value_g = tot_green_val / alpha
+                    # print(f"avg_value_g: {avg_value_g}, alpha: {alpha}")
                     # the new value
                     new_value_g = self._fr(avg_value_g)
+                    # print(f"new_value_g: {new_value_g}")
                     # If the delta is positive, it means green is dominant
                     # in the other hand, if negative it means blue is dominant
                     delta = new_value_g - avg_value_g
                     # we can update using + delta in green and -delta in blue
-                    new_value_g = (new_value_g + delta)*alpha
-                    new_value_b = (1 - new_value_g)*alpha
+                    final_g = np.clip((new_value_g + delta)*(1 - self.grid[x][0]), 0, 1)
+                    final_b = np.clip((1 - new_value_g)*(1 - self.grid[x][0]), 0, 1)
                     new_grid[x] = [
                     self.grid[x][0],  # Keep red channel unchanged
-                    new_value_g,  # Update green channel
-                    new_value_b  # Update blue channel
+                    final_g,  # Update green channel
+                    final_b  # Update blue channel
                     ]
 
                 else: 
@@ -144,18 +146,20 @@ class TernaryClassifier:
                 if alpha > 0:
                     # Calculate the average value for blue channel 
                     avg_value_b = tot_blue_val / alpha
+                    # print(f"avg_value_b: {avg_value_b}, alpha: {alpha}")
                     # the new value
                     new_value_b = self._fr(avg_value_b)
+                    # print(f"new_value_b: {new_value_b}")
                     # If the delta is positive, it means blue is dominant
                     # in the other hand, if negative it means red is dominant
                     delta = new_value_b - avg_value_b
                     # we can update using + delta in blue and -delta in red
-                    new_value_b = (new_value_b + delta)*alpha
-                    new_value_r = (1 - new_value_b)*alpha
+                    final_b = np.clip((new_value_b + delta)*(1 - self.grid[x][1]), 0, 1)
+                    final_r = np.clip((1 - new_value_b)*(1 - self.grid[x][1]), 0, 1)
                     new_grid[x] = [
-                        new_value_r,  # Update red channel
+                        final_r,  # Update red channel
                         self.grid[x][1],  # Keep green channel unchanged
-                        new_value_b   # Update blue channel
+                        final_b   # Update blue channel
                     ]
 
                 else: 
