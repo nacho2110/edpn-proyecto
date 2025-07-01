@@ -180,7 +180,8 @@ class TernaryClassifier:
         """
         Displays the current grid as an RGB image using matplotlib.
         """
-        img = np.clip(self.grid, 0, 1)  # Ensure values are in [0, 1] for imshow
+        img = np.clip(self.grid, 0, 1)
+        img = (img.reshape(img.shape[0], img.shape[1], 3) * 255).astype(np.uint8)# Ensure values are in [0, 1] for imshow
         if ax is None:
             plt.figure(figsize=(6, 6))
             plt.imshow(img)
