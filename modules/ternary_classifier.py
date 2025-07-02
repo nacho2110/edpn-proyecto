@@ -15,9 +15,9 @@ class TernaryClassifier:
         self.rhob = rhob
         self.s = s
         # amplification functions for each color
-        self.amp_r = lambda x: amp_polym(x, self.rhor)
-        self.amp_g = lambda x: amp_polym(x, self.rhog)
-        self.amp_b = lambda x: amp_polym(x, self.rhob)
+        self.amp_r = lambda x: amp_polym(x, self.rhor/(self.rhor + self.rhog))
+        self.amp_g = lambda x: amp_polym(x, self.rhog/(self.rhog + self.rhob))
+        self.amp_b = lambda x: amp_polym(x, self.rhob/(self.rhob + self.rhor))
         # time step
         self.t = 0
         # assertions to ensure valid parameters
@@ -27,9 +27,9 @@ class TernaryClassifier:
         # params related to neighborhood 
         self.r = r
         # quantization functions
-        self.q_r = lambda x: quantize(x, self.s, self.rhor)
-        self.q_g = lambda x: quantize(x, self.s, self.rhog)
-        self.q_b = lambda x: quantize(x, self.s, self.rhob)
+        self.q_r = lambda x: quantize(x, self.s, self.rhor/(self.rhor + self.rhog))
+        self.q_g = lambda x: quantize(x, self.s, self.rhog/(self.rhog + self.rhob))
+        self.q_b = lambda x: quantize(x, self.s, self.rhob/(self.rhob + self.rhor))
         
         self.neighbors = {}  # Diccionario para almacenar vecinos
         grid_shape = x0.shape[0:2]  # Assuming x0 is a 3D array (height, width, channels)
@@ -64,10 +64,10 @@ class TernaryClassifier:
             neighbor_values_r = [self.grid[y][0] for y in neighbors]
             neighbor_values_g = [self.grid[y][1] for y in neighbors]
             neighbor_values_b = [self.grid[y][2] for y in neighbors]
-            print(f"Processing pixel {x} with neighbors: {neighbors}")
+            '''print(f"Processing pixel {x} with neighbors: {neighbors}")
             print(f"neighbor_values_r: {np.sum(neighbor_values_r)}")
             print(f"neighbor_values_g: {np.sum(neighbor_values_g)}")
-            print(f"neighbor_values_b: {np.sum(neighbor_values_b)}")
+            print(f"neighbor_values_b: {np.sum(neighbor_values_b)}")'''
 
             # SE PUEDE REFACTORIZAR ESTO Y DEJARLO COMO UNA FUNCION NMS PARA NO REPETIR TANTO CODIGO
             # TE LO ENCARGO PARA QUE TMBN PUEDAS CACHAR LO QUE HICE AQUI JSJSJS (me dio paja hacerlo ahora XDDD)
