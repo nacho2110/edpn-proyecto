@@ -59,7 +59,14 @@ class BinaryClassifier:
 
     def show(self):
         plt.imshow(self.grid, cmap='binary', interpolation='nearest')
-        plt.clim(0,1)
+        plt.clim(0, 1)
         plt.colorbar()
         plt.title(f'Clasificador binario (s={self.s}, r={self.r},'+\
                   f'σ={self.sigma}, t={self.t})')
+
+
+class BinaryClassifierNoQuantization(BinaryClassifier):
+    def __init__(self, x0: np.ndarray, sigma: float, s: int, r: int, rho: float = 1/2):
+        super().__init__(x0, sigma, s, r, rho)
+        self.q = lambda x: x  # Sin cuantización
+        self.amp = lambda x: amp_polym(x, self.rho)  # Amplificación cúbica

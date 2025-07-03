@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from itertools import product
 
+
 class TernaryClassifier:
     def __init__(self, x0: np.ndarray, sigma: float, s: int, r: int, rhor: float = 1/3, rhog: float = 1/3, rhob: float = 1/3):
         self.dim = len(x0.shape)
@@ -195,3 +196,14 @@ class TernaryClassifier:
                 ax.set_title(title)
             ax.axis('off')
 
+
+class TernaryClassifierNoQuantization(TernaryClassifier):
+    def __init__(self, x0: np.ndarray, sigma: float, s: int, r: int, rhor: float = 1/3, rhog: float = 1/3, rhob: float = 1/3):
+        super().__init__(x0, sigma, s, r, rhor, rhog, rhob)
+        self.q_r = lambda x: x  # Sin cuantización
+        self.q_g = lambda x: x  # Sin cuantización
+        self.q_b = lambda x: x  # Sin cuantización
+        self.amp_r = lambda x: amp_polym(x, self.rhor/(self.rhor + self.rhog))  # Amplificación cúbica
+        self.amp_g = lambda x: amp_polym(x, self.rhog/(self.rhog + self.rhob))  # Amplificación cúbica
+        self.amp_b = lambda x: amp_polym(x, self.rhob/(self.rhob + self.rhor))  # Amplificación cúbica
+        
