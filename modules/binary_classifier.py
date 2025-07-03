@@ -57,12 +57,19 @@ class BinaryClassifier:
         self.history.append(np.mean(self.grid))
         self.t += 1
 
-    def show(self):
-        plt.imshow(self.grid, cmap='binary', interpolation='nearest')
-        plt.clim(0, 1)
-        plt.colorbar()
-        plt.title(f'Clasificador binario (s={self.s}, r={self.r},'+\
-                  f'σ={self.sigma}, t={self.t})')
+    def show(self, ax=None):
+        if ax is None:
+            fig, ax = plt.subplots()
+        im = ax.imshow(self.grid, cmap='binary', interpolation='nearest', vmin=0, vmax=1)
+        plt.colorbar(im, ax=ax)
+        ax.set_title(f'Clasificador binario (s={self.s}, r={self.r}, σ={self.sigma}, t={self.t})')
+        
+    def convergence(self):
+        """Calcula la convergencia del clasificador."""
+        return np.abs(np.mean(self.grid) - self.history[-1]) < np.prod(self.grid.shape)*1e-8
+    
+    def convergence_to_constant(self):
+        return np.all(self.grid > 0.75) or np.all(self.grid < 0.25)
 
 
 class BinaryClassifierNoQuantization(BinaryClassifier):

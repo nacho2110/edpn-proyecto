@@ -206,4 +206,12 @@ class TernaryClassifierNoQuantization(TernaryClassifier):
         self.amp_r = lambda x: amp_polym(x, self.rhor/(self.rhor + self.rhog))  # Amplificación cúbica
         self.amp_g = lambda x: amp_polym(x, self.rhog/(self.rhog + self.rhob))  # Amplificación cúbica
         self.amp_b = lambda x: amp_polym(x, self.rhob/(self.rhob + self.rhor))  # Amplificación cúbica
-        
+    
+    def _fr(self, x: float) -> float:
+        return (x + self.sigma * self.amp_r(x))
+    
+    def _fg(self, x: float) -> float:
+        return (x + self.sigma * self.amp_g(x))
+    
+    def _fb(self, x: float) -> float:
+        return (x + self.sigma * self.amp_b(x))
